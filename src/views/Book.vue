@@ -1,26 +1,26 @@
 <template>
-  <div class="book">
-    <ApolloQuery :query="query" :variables="{id: $route.params.id}">
-      <template slot-scope="{ result: { data: {book}, loading }, isLoading }">
+  <div class="book container">
+    <ApolloQuery :query="require('@/graphql/queries/Book.gql')" :variables="{ id: $route.params.id}">
+      <template slot-scope="{ result: { data, loading }, isLoading }">
         <div v-if="isLoading">Loading...</div>
-        <div v-else>
-          <h1>{{ book.title }}</h1>
-          <img :src="book.image" :alt="book.title">
-          <div>{{ book.author }}</div>
-          <div>{{ book.description }}</div>
-          <div>{{ book.category.name }}</div>
-          <div>{{ book.category.name }}</div>
-<!--          <div v-for="book of book.category.books" :key="book.id">-->
-<!--            <router-link :to="`/book/${book.id}`">-->
-<!--              {{ book.id }}. {{ book.title }}-->
-<!--            </router-link>-->
-<!--            <div>{{ book.author }}</div>-->
-<!--            <img :src="book.image" :alt="book.title">-->
-<!--          </div>-->
-<!--         -->
+        <div v-else class="flex mt-16 flex-col lg:flex-row">
           <div>
-            <router-link :to="`/book/${book.id}/edit`" class="link-margin">edit</router-link>
-            <a href="#" @click.prevent="deletedBook"  class="link-margin">delete</a>
+            <img :src="data.book.image" alt="book cover">
+          </div>
+
+          <div class="w-full lg:w-2/3 ml-0 mt-8 lg:mt-0 lg:ml-16">
+            <div class="text-4xl font-bold">{{ data.book.title }}</div>
+            <div class="text-2xl text-grey-900 mb-8">{{ data.book.author }}</div>
+            <div class="text-lg text-grey-900 leading-normal">{{ data.book.description }}</div>
+            <div class="my-12">
+              <a :href="data.book.link" target="_blank" class="border border-purple-900 border-solid rounded text-purple-900 px-4 py-4 hover:bg-purple-500 hover:text-white">View Link</a>
+            </div>
+            <router-link :to="`/book/${data.book.id}/edit`" href="#" class="">Edit</router-link>
+            &middot;
+            <a href="#" class="" @click.prevent="deletedBook">Delete</a>
+
+          </div>
+          <div>
           </div>
         </div>
       </template>
